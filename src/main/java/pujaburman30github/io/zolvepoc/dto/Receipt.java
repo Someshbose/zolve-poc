@@ -1,8 +1,11 @@
 package pujaburman30github.io.zolvepoc.dto;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Builder
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Receipt {
 
     private long payee;

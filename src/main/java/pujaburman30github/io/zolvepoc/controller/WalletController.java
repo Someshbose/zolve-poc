@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pujaburman30github.io.zolvepoc.dto.Receipt;
-import pujaburman30github.io.zolvepoc.model.Transactions;
 import pujaburman30github.io.zolvepoc.model.User;
 import pujaburman30github.io.zolvepoc.service.WalletService;
 
-import java.util.List;
 
 @RestController
 public class WalletController {

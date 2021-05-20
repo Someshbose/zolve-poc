@@ -8,7 +8,7 @@ import pujaburman30github.io.zolvepoc.model.Transactions;
 import pujaburman30github.io.zolvepoc.model.User;
 import pujaburman30github.io.zolvepoc.service.WalletService;
 
-import java.net.http.HttpResponse;
+import java.util.List;
 
 @RestController
 public class WalletController {
@@ -30,6 +30,16 @@ public class WalletController {
     public ResponseEntity createUser(@RequestBody User user){
         User savedUser = service.createUser(user);
         return ResponseEntity.ok(savedUser);
+    }
+
+    @GetMapping("/history/{user-id}")
+    public ResponseEntity getTransactionHistory(@PathVariable("user-id") Long userId){
+        return ResponseEntity.ok(service.history(userId));
+    }
+
+    @PostMapping("/send")
+    public ResponseEntity sendMoney(@RequestBody Receipt receipt){
+        return ResponseEntity.ok(service.send(receipt));
     }
 
     @GetMapping("/balance/{user-id}")

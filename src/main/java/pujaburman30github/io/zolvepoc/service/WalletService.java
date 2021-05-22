@@ -1,13 +1,16 @@
 package pujaburman30github.io.zolvepoc.service;
 
+import Someshbose.github.io.zolvepoc.dao.ReceiptDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pujaburman30github.io.zolvepoc.dto.Receipt;
 import pujaburman30github.io.zolvepoc.model.TransactionType;
 import pujaburman30github.io.zolvepoc.model.Transactions;
 import pujaburman30github.io.zolvepoc.model.User;
 import pujaburman30github.io.zolvepoc.repo.TransactionRepository;
 import pujaburman30github.io.zolvepoc.repo.UserRespository;
+import pujaburman30github.io.zolvepoc.util.InSuffiecientFundException;
+import pujaburman30github.io.zolvepoc.util.UserCreationException;
+import pujaburman30github.io.zolvepoc.util.UserNotFoundException;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -23,22 +26,22 @@ public class WalletService {
     private TransactionRepository transactionRepository;
 
     @Transactional
-    public Transactions debitMoney(Receipt receipt){
-        User payee = getUser(receipt.getPayee());
+    public Transactions debitMoney(ReceiptDto receipt) throws InSuffiecientFundException,UserNotFoundException{
+        User payee = getUser(receipt.getPayer());
         if(payee.getBalance()- receipt.getAmount()>100){
-            Transactions transaction = Transactions.builder().payee(receipt.getPayee()).amount(receipt.getAmount()).type(TransactionType.DEBIT).build();
+            Transactions transaction = Transactions.builder().payee(receipt.getPayer()).amount(receipt.getAmount()).type(TransactionType.DEBIT).build();
             transactionRepository.save(transaction);
             payee.setBalance(payee.getBalance()-receipt.getAmount());
             userRespository.save(payee);
             return transaction;
         }
         else{
-            throw new RuntimeException("Failed as minimum amount is less than Rs-100 not allowed!");
+            throw new InSuffiecientFundException("Failed as minimum amount is less than Rs-100 not allowed!");
         }
     }
 
     @Transactional
-    public Transactions creditMoney(Receipt receipt){
+    public Transactions creditMoney(ReceiptDto receipt)throws UserNotFoundException{
         User benificary =
                 getUser(receipt.getBenificiary());
 
@@ -51,12 +54,12 @@ public class WalletService {
     }
 
     @Transactional
-    public Transactions send(Receipt receipt){
-        User payee = getUser(receipt.getPayee());
+    public Transactions send(ReceiptDto receipt){
+        User payee = getUser(receipt.getPayer());
         User benificiary = getUser(receipt.getBenificiary());
 
         if(payee.getBalance()-receipt.getAmount()>=100){
-            Transactions transaction = Transactions.builder().payee(receipt.getPayee()).payer(receipt.getBenificiary()).amount(receipt.getAmount()).build();
+            Transactions transaction = Transactions.builder().payee(receipt.getPayer()).payer(receipt.getBenificiary()).amount(receipt.getAmount()).type(TransactionType.DEBIT).build();
             transactionRepository.save(transaction);
             payee.setBalance(payee.getBalance()-receipt.getAmount());
             benificiary.setBalance(benificiary.getBalance()+ receipt.getAmount());
@@ -70,11 +73,14 @@ public class WalletService {
     }
 
     public User createUser(User user){
+        if(user.getBalance()<100){
+            throw new UserCreationException("Minimum account balance to create account is Rs. 100");
+        }
         userRespository.save(user);
         return user;
     }
 
-    public double getBalance(Long id){
+    public double getBalance(Long id) throws UserNotFoundException{
         return getUser(id).getBalance();
     }
 
@@ -83,6 +89,12 @@ public class WalletService {
     }
 
     private User getUser(Long id){
-        return userRespository.findById(id).get();
+        Optional<User> user = userRespository.findById(id);
+        if (user.isPresent()){
+            return user.get();
+        }else{
+            throw new UserNotFoundException("User with id- {"+id +"}you are looking for doesn't exist!");
+        }
+
     }
 }

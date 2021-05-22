@@ -1,0 +1,184 @@
+openapi: 3.0.1
+info:
+  title: Zolve POC
+  description: Zolve API.
+  version: 1.0.0
+servers:
+  - url: /v2
+
+paths:
+  /add:
+    post:
+      summary: Add User
+      operationId: addUser
+      requestBody:
+        description: User to be added to Zolve
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+        required: true
+      responses:
+        201:
+          description: User added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+
+  /debit:
+    post:
+      summary: Debit money from Account
+      operationId: debitAmount
+      requestBody:
+        description: Amount debited from Zolve user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReceiptDto'
+        required: true
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionDto'
+  /credit:
+    post:
+      summary: Credit money to Account
+      operationId: creditAmount
+      requestBody:
+        description: Amount added to Zolve user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReceiptDto'
+        required: true
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionDto'
+  /send:
+    post:
+      summary: send money from payer to payee Account
+      operationId: sendAmount
+      requestBody:
+        description: Amount added to Zolve user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReceiptDto'
+        required: true
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionDto'
+
+  /balance/{userId}:
+    get:
+      summary: Show banace of User Account
+      operationId: showBalanceById
+      parameters:
+        - $ref: '#/components/parameters/UserIdPathParam'
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: string
+
+  /history/{userId}:
+    get:
+      summary: Show banace of User Account
+      operationId: userHistory
+      parameters:
+        - $ref: '#/components/parameters/UserIdPathParam'
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionDto'
+
+
+components:
+  schemas:
+    ReceiptDto:
+      type: object
+      required:
+        - payer
+        - benificiary
+        - amount
+      properties:
+        payer:
+          type: integer
+          format: int64
+        benificiary:
+          type: integer
+          format: int64
+        amount:
+          type: number
+          format: double
+
+    UserDto:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - contact
+        - balance
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+          example: "Puja"
+        lastName:
+          type: string
+          example: "Burman"
+        contact:
+          type: string
+          example: "9339226744"
+        balance:
+          type: number
+          format: double
+
+    TransactionDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        payer:
+          type: integer
+          format: int64
+        payee:
+          type: integer
+          format: int64
+        amount:
+          type: integer
+          format: double
+        type:
+          type: string
+
+  parameters:
+    UserIdPathParam:
+      name: userId
+      in: path
+      description: userId you are searching
+      required: true
+      schema:
+        type: integer
+        format: int64

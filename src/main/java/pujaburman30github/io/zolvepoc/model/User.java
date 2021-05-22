@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Table(name = "Z_USER")
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
@@ -23,6 +24,5 @@ public class User {
 
     private long contact;
 
-    @Setter
     private double balance;
 }

@@ -24,6 +24,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserDto'
+        404:
+          $ref: '#/components/responses/404'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
 
   /debit:
     post:
@@ -43,6 +49,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TransactionDto'
+        404:
+          $ref: '#/components/responses/404'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
   /credit:
     post:
       summary: Credit money to Account
@@ -61,6 +73,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TransactionDto'
+        404:
+          $ref: '#/components/responses/404'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
   /send:
     post:
       summary: send money from payer to payee Account
@@ -79,6 +97,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TransactionDto'
+        404:
+          $ref: '#/components/responses/404'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
 
   /balance/{userId}:
     get:
@@ -93,6 +117,12 @@ paths:
             application/json:
               schema:
                 type: string
+        404:
+          $ref: '#/components/responses/404'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
 
   /history/{userId}:
     get:
@@ -109,6 +139,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/TransactionDto'
+        404:
+          $ref: '#/components/responses/404'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
 
 
 components:
@@ -171,6 +207,17 @@ components:
           format: double
         type:
           type: string
+    Error:
+      type: object
+      description: Internal Error object model
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
 
   parameters:
     UserIdPathParam:
@@ -181,3 +228,23 @@ components:
       schema:
         type: integer
         format: int64
+
+  responses:
+    400:
+      description: A bad request was made
+      content:
+        text/plain:
+          schema:
+            $ref: '#/components/schemas/Error'
+    404:
+      description: Not found
+      content:
+        text/plain:
+          schema:
+            $ref: '#/components/schemas/Error'
+    500:
+      description: Internal server error
+      content:
+        text/plain:
+          schema:
+            $ref: '#/components/schemas/Error'

@@ -1,8 +1,8 @@
 package pujaburman30github.io.zolvepoc.service;
 
+import Someshbose.github.io.zolvepoc.dao.ReceiptDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pujaburman30github.io.zolvepoc.dto.Receipt;
 import pujaburman30github.io.zolvepoc.model.TransactionType;
 import pujaburman30github.io.zolvepoc.model.Transactions;
 import pujaburman30github.io.zolvepoc.model.User;
@@ -26,10 +26,10 @@ public class WalletService {
     private TransactionRepository transactionRepository;
 
     @Transactional
-    public Transactions debitMoney(Receipt receipt) throws InSuffiecientFundException,UserNotFoundException{
-        User payee = getUser(receipt.getPayee());
+    public Transactions debitMoney(ReceiptDto receipt) throws InSuffiecientFundException,UserNotFoundException{
+        User payee = getUser(receipt.getPayer());
         if(payee.getBalance()- receipt.getAmount()>100){
-            Transactions transaction = Transactions.builder().payee(receipt.getPayee()).amount(receipt.getAmount()).type(TransactionType.DEBIT).build();
+            Transactions transaction = Transactions.builder().payee(receipt.getPayer()).amount(receipt.getAmount()).type(TransactionType.DEBIT).build();
             transactionRepository.save(transaction);
             payee.setBalance(payee.getBalance()-receipt.getAmount());
             userRespository.save(payee);
@@ -41,7 +41,7 @@ public class WalletService {
     }
 
     @Transactional
-    public Transactions creditMoney(Receipt receipt)throws UserNotFoundException{
+    public Transactions creditMoney(ReceiptDto receipt)throws UserNotFoundException{
         User benificary =
                 getUser(receipt.getBenificiary());
 
@@ -54,12 +54,12 @@ public class WalletService {
     }
 
     @Transactional
-    public Transactions send(Receipt receipt){
-        User payee = getUser(receipt.getPayee());
+    public Transactions send(ReceiptDto receipt){
+        User payee = getUser(receipt.getPayer());
         User benificiary = getUser(receipt.getBenificiary());
 
         if(payee.getBalance()-receipt.getAmount()>=100){
-            Transactions transaction = Transactions.builder().payee(receipt.getPayee()).payer(receipt.getBenificiary()).amount(receipt.getAmount()).type(TransactionType.DEBIT).build();
+            Transactions transaction = Transactions.builder().payee(receipt.getPayer()).payer(receipt.getBenificiary()).amount(receipt.getAmount()).type(TransactionType.DEBIT).build();
             transactionRepository.save(transaction);
             payee.setBalance(payee.getBalance()-receipt.getAmount());
             benificiary.setBalance(benificiary.getBalance()+ receipt.getAmount());

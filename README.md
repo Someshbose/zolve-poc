@@ -1,5 +1,8 @@
 #Zolve POC
 
+
+[![Build Status](https://travis-ci.org/Someshbose/zolve-poc.svg?branch=master)](https://travis-ci.org/Someshbose/zolve-poc)
+
 application url-
 
 ```shell

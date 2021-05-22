@@ -16,17 +16,15 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              $ref: '#components/schemas/UserDto'
+              $ref: '#/components/schemas/UserDto'
         required: true
       responses:
-        200:
+        201:
           description: User added
           content:
             application/json:
               schema:
-                type: object
-                $ref: '#components/schemas/UserDto'
+                $ref: '#/components/schemas/UserDto'
 
   /debit:
     post:
@@ -37,17 +35,15 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              $ref: '#components/schemas/ReceiptDto'
+              $ref: '#/components/schemas/ReceiptDto'
         required: true
       responses:
-        200:
+        201:
           description: successful operation
           content:
             application/json:
               schema:
-                type: object
-                $ref: '#/components/schemas/ReceiptDto'
+                $ref: '#/components/schemas/TransactionDto'
   /credit:
     post:
       summary: Credit money to Account
@@ -57,17 +53,15 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              $ref: '#components/schemas/ReceiptDto'
+              $ref: '#/components/schemas/ReceiptDto'
         required: true
       responses:
-        200:
+        201:
           description: successful operation
           content:
             application/json:
               schema:
-                type: object
-                $ref: '#/components/schemas/ReceiptDto'
+                $ref: '#/components/schemas/TransactionDto'
   /send:
     post:
       summary: send money from payer to payee Account
@@ -77,51 +71,22 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              $ref: '#components/schemas/ReceiptDto'
+              $ref: '#/components/schemas/ReceiptDto'
         required: true
       responses:
-        200:
+        201:
           description: successful operation
           content:
             application/json:
               schema:
-                type: object
-                $ref: '#/components/schemas/ReceiptDto'
+                $ref: '#/components/schemas/TransactionDto'
 
-  /balance:
+  /balance/{userId}:
     get:
       summary: Show banace of User Account
-      operationId: showBalance
+      operationId: showBalanceById
       parameters:
-        - name: userId
-          in: path
-          description: userId you are searching
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        200:
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                $ref: '#/components/schemas/ReceiptDto'
-
-  /history:
-    get:
-      summary: Show banace of User Account
-      operationId: userHistory
-      parameters:
-        - name: userId
-          in: path
-          description: userId you are searching
-          required: true
-          schema:
-            type: integer
-            format: int64
+        - $ref: '#/components/parameters/UserIdPathParam'
       responses:
         200:
           description: successful operation
@@ -130,12 +95,31 @@ paths:
               schema:
                 type: string
 
+  /history/{userId}:
+    get:
+      summary: Show banace of User Account
+      operationId: userHistory
+      parameters:
+        - $ref: '#/components/parameters/UserIdPathParam'
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionDto'
 
 
 components:
   schemas:
     ReceiptDto:
       type: object
+      required:
+        - payer
+        - benificiary
+        - amount
       properties:
         payer:
           type: integer
@@ -149,7 +133,15 @@ components:
 
     UserDto:
       type: object
+      required:
+        - firstName
+        - lastName
+        - contact
+        - balance
       properties:
+        id:
+          type: integer
+          format: int64
         firstName:
           type: string
           example: "Puja"
@@ -163,3 +155,30 @@ components:
           type: number
           format: double
 
+    TransactionDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        payer:
+          type: integer
+          format: int64
+        payee:
+          type: integer
+          format: int64
+        amount:
+          type: integer
+          format: double
+        type:
+          type: string
+
+  parameters:
+    UserIdPathParam:
+      name: userId
+      in: path
+      description: userId you are searching
+      required: true
+      schema:
+        type: integer
+        format: int64

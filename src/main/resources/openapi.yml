@@ -1,11 +1,10 @@
 openapi: 3.0.1
 info:
   title: Zolve POC
-  description: Zolve API.
+  description: This is a simple Zolve API App.
   version: 1.0.0
 servers:
   - url: /v2
-
 paths:
   /add:
     post:

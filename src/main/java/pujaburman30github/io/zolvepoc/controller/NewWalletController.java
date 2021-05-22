@@ -1,8 +1,5 @@
 package pujaburman30github.io.zolvepoc.controller;
 
-import Someshbose.github.io.zolvepoc.dao.ReceiptDto;
-import Someshbose.github.io.zolvepoc.dao.TransactionDto;
-import Someshbose.github.io.zolvepoc.dao.UserDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.NativeWebRequest;
-import pujabirman30github.io.zolvepoc.api.*;
+import pujaburman30github.io.zolvepoc.api.*;
+import pujaburman30github.io.zolvepoc.dao.ReceiptDto;
+import pujaburman30github.io.zolvepoc.dao.TransactionDto;
+import pujaburman30github.io.zolvepoc.dao.UserDto;
 import pujaburman30github.io.zolvepoc.model.Transactions;
 import pujaburman30github.io.zolvepoc.model.User;
 import pujaburman30github.io.zolvepoc.service.WalletService;

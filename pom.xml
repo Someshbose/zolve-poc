@@ -86,8 +86,8 @@
 								${project.basedir}/src/main/resources/openapi.yml
 							</inputSpec>
 							<generatorName>spring</generatorName>
-							<apiPackage>pujabirman30github.io.zolvepoc.api</apiPackage>
-							<modelPackage>Someshbose.github.io.zolvepoc.dao</modelPackage>
+							<apiPackage>pujaburman30github.io.zolvepoc.api</apiPackage>
+							<modelPackage>pujaburman30github.io.zolvepoc.dao</modelPackage>
 							<supportingFilesToGenerate>
 								ApiUtil.java
 							</supportingFilesToGenerate>

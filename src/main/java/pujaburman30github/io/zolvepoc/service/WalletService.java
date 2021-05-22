@@ -1,8 +1,8 @@
 package pujaburman30github.io.zolvepoc.service;
 
-import Someshbose.github.io.zolvepoc.dao.ReceiptDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pujaburman30github.io.zolvepoc.dao.ReceiptDto;
 import pujaburman30github.io.zolvepoc.model.TransactionType;
 import pujaburman30github.io.zolvepoc.model.Transactions;
 import pujaburman30github.io.zolvepoc.model.User;

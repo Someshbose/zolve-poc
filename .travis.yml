@@ -1,0 +1,25 @@
+dist: xenial
+os: linux
+language: java
+cache:
+  directories:
+    - "~/.m2"
+branches:
+  only:
+    - master
+install: ''
+services:
+  - docker
+before_install:
+  - chmod +x mvnw
+  - docker version
+jobs:
+  fast_finish: true
+  include:
+    - jdk: openjdk11
+      env:
+        - DESC="build with OPENJDK11"
+        - USE_MAVEN_REPO="true"
+        - CMD="mvn clean package"
+script:
+  - "mvn clean package -B"

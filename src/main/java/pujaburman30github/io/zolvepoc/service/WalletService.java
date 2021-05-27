@@ -29,7 +29,7 @@ public class WalletService {
     public Transactions debitMoney(ReceiptDto receipt) throws InSuffiecientFundException,UserNotFoundException{
         User payee = getUser(receipt.getPayer());
         if(payee.getBalance()- receipt.getAmount()>100){
-            Transactions transaction = Transactions.builder().payee(receipt.getPayer()).amount(receipt.getAmount()).type(TransactionType.DEBIT).build();
+            Transactions transaction = Transactions.builder().payee(payee).amount(receipt.getAmount()).type(TransactionType.DEBIT).build();
             transactionRepository.save(transaction);
             payee.setBalance(payee.getBalance()-receipt.getAmount());
             userRespository.save(payee);
@@ -45,7 +45,7 @@ public class WalletService {
         User benificary =
                 getUser(receipt.getBenificiary());
 
-        Transactions transaction = Transactions.builder().payer(receipt.getBenificiary()).amount(receipt.getAmount()).type(TransactionType.CREDIT).build();
+        Transactions transaction = Transactions.builder().payer(benificary).amount(receipt.getAmount()).type(TransactionType.CREDIT).build();
         transactionRepository.save(transaction);
         benificary.setBalance(benificary.getBalance()+receipt.getAmount());
         userRespository.save(benificary);
@@ -59,7 +59,7 @@ public class WalletService {
         User benificiary = getUser(receipt.getBenificiary());
 
         if(payee.getBalance()-receipt.getAmount()>=100){
-            Transactions transaction = Transactions.builder().payee(receipt.getPayer()).payer(receipt.getBenificiary()).amount(receipt.getAmount()).type(TransactionType.DEBIT).build();
+            Transactions transaction = Transactions.builder().payee(payee).payer(benificiary).amount(receipt.getAmount()).type(TransactionType.DEBIT).build();
             transactionRepository.save(transaction);
             payee.setBalance(payee.getBalance()-receipt.getAmount());
             benificiary.setBalance(benificiary.getBalance()+ receipt.getAmount());
@@ -84,8 +84,8 @@ public class WalletService {
         return getUser(id).getBalance();
     }
 
-    public List<Transactions> history(long id){
-        return transactionRepository.findByPayerOrPayee(id,id);
+    public List<Transactions> history(long id) throws UserNotFoundException{
+        return (List<Transactions>) getUser(id).getTransactions();
     }
 
     private User getUser(Long id){

@@ -17,11 +17,15 @@ public class Transactions {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Z_SEQ")
     private long id;
 
-    private long payer;
-
-    private long payee;
-
     private double amount;
+
+    @ManyToOne
+    @JoinColumn(name = "payer",insertable = true,updatable = false)
+    private User payer;
+
+    @ManyToOne
+    @JoinColumn(name = "payee" ,insertable = true,updatable = false)
+    private User payee;
 
     private TransactionType type;
 }

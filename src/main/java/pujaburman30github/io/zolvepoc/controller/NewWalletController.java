@@ -15,6 +15,7 @@ import pujaburman30github.io.zolvepoc.model.Transactions;
 import pujaburman30github.io.zolvepoc.model.User;
 import pujaburman30github.io.zolvepoc.service.WalletService;
 
+import javax.print.attribute.standard.Destination;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -82,6 +83,13 @@ public class NewWalletController implements AddApi, BalanceApi, CreditApi, Debit
     }
 
     private TransactionDto getTransactionDtoFromEntity(Transactions transactions){
+
+        modelMapper.typeMap(Transactions.class,TransactionDto.class).addMappings(mapper->
+        {
+            mapper.map(src-> src.getPayee().getId(), TransactionDto::setPayee);
+            mapper.map(src-> src.getPayer().getId(), TransactionDto::setPayer);
+
+        });
         TransactionDto transactionDto = modelMapper.map(transactions,TransactionDto.class);
         return transactionDto;
     }

@@ -1,8 +1,5 @@
 package pujaburman30github.io.zolvepoc.controller;
 
-import Someshbose.github.io.zolvepoc.dao.ReceiptDto;
-import Someshbose.github.io.zolvepoc.dao.TransactionDto;
-import Someshbose.github.io.zolvepoc.dao.UserDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,11 +7,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.NativeWebRequest;
-import pujabirman30github.io.zolvepoc.api.*;
+import pujaburman30github.io.zolvepoc.api.*;
+import pujaburman30github.io.zolvepoc.dao.ReceiptDto;
+import pujaburman30github.io.zolvepoc.dao.TransactionDto;
+import pujaburman30github.io.zolvepoc.dao.UserDto;
 import pujaburman30github.io.zolvepoc.model.Transactions;
 import pujaburman30github.io.zolvepoc.model.User;
 import pujaburman30github.io.zolvepoc.service.WalletService;
 
+import javax.print.attribute.standard.Destination;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -82,6 +83,13 @@ public class NewWalletController implements AddApi, BalanceApi, CreditApi, Debit
     }
 
     private TransactionDto getTransactionDtoFromEntity(Transactions transactions){
+
+        modelMapper.typeMap(Transactions.class,TransactionDto.class).addMappings(mapper->
+        {
+            mapper.map(src-> src.getPayee().getId(), TransactionDto::setPayee);
+            mapper.map(src-> src.getPayer().getId(), TransactionDto::setPayer);
+            mapper.map(src->src.getTransaction_date(),TransactionDto::setTimeAt);
+        });
         TransactionDto transactionDto = modelMapper.map(transactions,TransactionDto.class);
         return transactionDto;
     }

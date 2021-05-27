@@ -205,7 +205,7 @@ components:
         amount:
           type: integer
           format: double
-        type:
+        timeAt:
           type: string
     Error:
       type: object

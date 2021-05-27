@@ -3,6 +3,7 @@ package pujaburman30github.io.zolvepoc.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
 @Table(name = "Z_TRANSACTION")
@@ -27,5 +28,5 @@ public class Transactions {
     @JoinColumn(name = "payee" ,insertable = true,updatable = false)
     private User payee;
 
-    private TransactionType type;
+    private Instant transaction_date;
 }

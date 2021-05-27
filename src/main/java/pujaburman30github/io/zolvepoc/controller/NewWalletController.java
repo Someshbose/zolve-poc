@@ -88,7 +88,7 @@ public class NewWalletController implements AddApi, BalanceApi, CreditApi, Debit
         {
             mapper.map(src-> src.getPayee().getId(), TransactionDto::setPayee);
             mapper.map(src-> src.getPayer().getId(), TransactionDto::setPayer);
-
+            mapper.map(src->src.getTransaction_date(),TransactionDto::setTimeAt);
         });
         TransactionDto transactionDto = modelMapper.map(transactions,TransactionDto.class);
         return transactionDto;

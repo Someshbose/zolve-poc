@@ -36,8 +36,11 @@ public class User {
 
     private long contact;
 
+    @OneToMany(mappedBy = "payee" ,targetEntity = Transactions.class)
+    private Collection<Transactions> creditTransactions;
+
     @OneToMany(mappedBy = "payer" ,targetEntity = Transactions.class)
-    private Collection<Transactions> transactions;
+    private Collection<Transactions> debitTransactions;
 
     private double balance;
 }

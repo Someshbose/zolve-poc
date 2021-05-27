@@ -3,6 +3,7 @@ package pujaburman30github.io.zolvepoc.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
 @Table(name = "Z_TRANSACTION")
@@ -17,11 +18,15 @@ public class Transactions {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Z_SEQ")
     private long id;
 
-    private long payer;
-
-    private long payee;
-
     private double amount;
 
-    private TransactionType type;
+    @ManyToOne
+    @JoinColumn(name = "payer",insertable = true,updatable = false)
+    private User payer;
+
+    @ManyToOne
+    @JoinColumn(name = "payee" ,insertable = true,updatable = false)
+    private User payee;
+
+    private Instant transaction_date;
 }

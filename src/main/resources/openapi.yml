@@ -207,6 +207,11 @@ components:
           format: double
         timeAt:
           type: string
+        transaction_type:
+          type: string
+#          type: array
+#          items :
+#            type: string
     Error:
       type: object
       description: Internal Error object model

@@ -50,26 +50,26 @@ public class NewWalletController implements AddApi, BalanceApi, CreditApi, Debit
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<TransactionDto> creditAmount(ReceiptDto receiptDto) {
         Transactions credit = service.creditMoney(receiptDto);
-        return ResponseEntity.ok(getTransactionDtoFromEntity(credit));
+        return ResponseEntity.ok(getTransactionDtoFromEntity(credit, receiptDto.getBenificiary()));
     }
 
     @Override
     public ResponseEntity<TransactionDto> debitAmount(ReceiptDto receiptDto) {
         Transactions debit = service.debitMoney(receiptDto);
-        return ResponseEntity.ok(getTransactionDtoFromEntity(debit));
+        return ResponseEntity.ok(getTransactionDtoFromEntity(debit,receiptDto.getPayer()));
     }
 
     @Override
     public ResponseEntity<List<TransactionDto>> userHistory(Long userId) {
         List<Transactions> list = service.history(userId);
-        List<TransactionDto> dtoList = list.stream().map(item -> getTransactionDtoFromEntity(item)).collect(Collectors.toList());
+        List<TransactionDto> dtoList = list.stream().map(item -> getTransactionDtoFromEntity(item,userId)).collect(Collectors.toList());
         return ResponseEntity.ok(dtoList);
     }
 
     @Override
     public ResponseEntity<TransactionDto> sendAmount(ReceiptDto receiptDto) {
         Transactions send = service.send(receiptDto);
-        return ResponseEntity.ok(getTransactionDtoFromEntity(send));
+        return ResponseEntity.ok(getTransactionDtoFromEntity(send,receiptDto.getPayer()));
     }
 
     private User getUserFromDto(UserDto userDto) {
@@ -82,14 +82,17 @@ public class NewWalletController implements AddApi, BalanceApi, CreditApi, Debit
         return userDto;
     }
 
-    private TransactionDto getTransactionDtoFromEntity(Transactions transactions){
+    private TransactionDto getTransactionDtoFromEntity(Transactions transactions,Long userId){
 
         modelMapper.typeMap(Transactions.class,TransactionDto.class).addMappings(mapper->
         {
             mapper.map(src-> src.getPayee().getId(), TransactionDto::setPayee);
             mapper.map(src-> src.getPayer().getId(), TransactionDto::setPayer);
-            mapper.map(src->src.getTransaction_date(),TransactionDto::setTimeAt);
+            mapper.map(src-> src.getTransaction_date(),TransactionDto::setTimeAt);
+            mapper.map(src-> src.getTypes()==null?null:src.getTypes().stream().map(e->{System.out.println(e.getType());
+                return e.getType().toString();}).findFirst() ,TransactionDto::setTransactionType);
         });
+
         TransactionDto transactionDto = modelMapper.map(transactions,TransactionDto.class);
         return transactionDto;
     }

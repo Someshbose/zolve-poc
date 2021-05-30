@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pujaburman30github.io.zolvepoc.dao.ReceiptDto;
 import pujaburman30github.io.zolvepoc.model.TransactionType;
+import pujaburman30github.io.zolvepoc.model.TransactionTypeMapping;
 import pujaburman30github.io.zolvepoc.model.Transactions;
 import pujaburman30github.io.zolvepoc.model.User;
+import pujaburman30github.io.zolvepoc.repo.TransactionMappingRepository;
 import pujaburman30github.io.zolvepoc.repo.TransactionRepository;
 import pujaburman30github.io.zolvepoc.repo.UserRespository;
 import pujaburman30github.io.zolvepoc.util.InSuffiecientFundException;
@@ -26,6 +28,9 @@ public class WalletService {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Autowired
+    private TransactionMappingRepository transactionMappingRepository;
+
     @Transactional
     public Transactions debitMoney(ReceiptDto receipt) throws InSuffiecientFundException,UserNotFoundException{
         User payee = getUser(receipt.getPayer());
@@ -34,6 +39,8 @@ public class WalletService {
             transactionRepository.save(transaction);
             payee.setBalance(payee.getBalance()-receipt.getAmount());
             userRespository.save(payee);
+            TransactionTypeMapping mapping = TransactionTypeMapping.builder().transaction_type(transaction).useId(payee).type(TransactionType.DEBIT).build();
+            transactionMappingRepository.save(mapping);
             return transaction;
         }
         else{
@@ -50,6 +57,8 @@ public class WalletService {
         transactionRepository.save(transaction);
         benificary.setBalance(benificary.getBalance()+receipt.getAmount());
         userRespository.save(benificary);
+        TransactionTypeMapping mapping = TransactionTypeMapping.builder().transaction_type(transaction).useId(benificary).type(TransactionType.CREDIT).build();
+        transactionMappingRepository.save(mapping);
         return transaction;
 
     }
@@ -66,6 +75,13 @@ public class WalletService {
             benificiary.setBalance(benificiary.getBalance()+ receipt.getAmount());
             userRespository.save(payee);
             userRespository.save(benificiary);
+
+            TransactionTypeMapping mapping = TransactionTypeMapping.builder().transaction_type(transaction).useId(payee).type(TransactionType.DEBIT).build();
+            transactionMappingRepository.save(mapping);
+
+            TransactionTypeMapping mapping2 = TransactionTypeMapping.builder().transaction_type(transaction).useId(benificiary).type(TransactionType.CREDIT).build();
+            transactionMappingRepository.save(mapping2);
+
             return transaction;
         }
         else{

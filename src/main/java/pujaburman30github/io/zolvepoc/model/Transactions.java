@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "Z_TRANSACTION")
@@ -29,4 +31,7 @@ public class Transactions {
     private User payee;
 
     private Instant transaction_date;
+
+    @OneToMany(mappedBy = "transaction_type",targetEntity = TransactionTypeMapping.class)
+    private List<TransactionTypeMapping> types;
 }
